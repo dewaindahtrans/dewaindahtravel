@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PT DEWA INDAH WISATA | Pemesanan Perjalanan</title>
+  <style>
+    :root{
+      --bg:#E6F4FF;
+      --ink:#0f172a;
+      --ink-soft:#334155;
+      --brand:#0ea5e9;
+      --ok:#16a34a;
+      --card:#FFFFFF;
+      --muted:#f1f5f9;
+      --radius:16px;
+      --shadow: 0 8px 24px rgba(2,6,23,.12);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif; color:var(--ink); background:var(--bg);}
+    header{background:linear-gradient(180deg, #E6F4FF 0%, #D7EEFF 100%); border-bottom:1px solid #cfe8ff; position:sticky; top:0; z-index:10; backdrop-filter:saturate(1.1) blur(6px);}
+    .wrap{max-width:1100px; margin:auto; padding:16px;}
+    .row{display:flex; gap:16px; flex-wrap:wrap;}
+    .brand{display:flex; align-items:center; gap:12px}
+    .brand img{height:52px; width:auto; object-fit:contain}
+    .brand h1{font-size:18px; margin:0; letter-spacing:.3px}
+    nav{margin-left:auto; display:flex; align-items:center; gap:16px}
+    nav a{color:var(--ink); text-decoration:none; font-weight:600}
+    .hero{padding:32px 16px 8px}
+    .hero-card{background:var(--card); border:1px solid #dbeafe; border-radius:var(--radius); padding:24px; box-shadow:var(--shadow)}
+    .hero h2{margin:0 0 8px; font-size:28px}
+    .hero p{margin:0; color:var(--ink-soft)}
+    section{padding:28px 16px}
+    .section-title{font-size:22px; margin:0 0 16px}
+    .grid-2{display:grid; grid-template-columns:repeat(2,1fr); gap:16px}
+    .card{background:var(--card); border:1px solid #dbeafe; border-radius:var(--radius); box-shadow:var(--shadow); padding:20px}
+    .card h3{margin:0 0 8px}
+    .card ul{margin:0; padding-left:18px}
+    .gallery{display:grid; grid-template-columns:repeat(auto-fit, minmax(220px,1fr)); gap:14px}
+    .gallery figure{margin:0; background:var(--card); border:1px solid #e2e8f0; border-radius:14px; overflow:hidden; box-shadow:var(--shadow)}
+    .gallery img{display:block; width:100%; height:160px; object-fit:cover}
+    .gallery figcaption{padding:10px 12px; font-weight:600}
+    .stepper{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px}
+    .pill{background:var(--muted); border:1px solid #e2e8f0; padding:8px 12px; border-radius:999px; font-weight:700; color:#334155}
+    .pill.active{background:#dbeafe; border-color:#93c5fd; color:#1e293b}
+    .form-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:14px}
+    label{font-size:13px; font-weight:600; color:#1e293b}
+    input[type="text"], input[type="date"], input[type="tel"], select{width:100%; padding:12px 12px; border:1px solid #cbd5e1; border-radius:12px; background:#fff; color:var(--ink)}
+    input::placeholder{color:#94a3b8}
+    .hint{font-size:12px; color:#64748b}
+    .btn{appearance:none; border:0; background:var(--brand); color:white; font-weight:800; padding:12px 16px; border-radius:12px; cursor:pointer; box-shadow:0 6px 16px rgba(14,165,233,.3)}
+    .btn:disabled{opacity:.5; cursor:not-allowed}
+    .btn.outline{background:transparent; color:var(--brand); border:2px solid var(--brand)}
+    .price{font-size:16px; font-weight:800}
+    .muted{color:#475569}
+    .divider{height:1px; background:#e2e8f0; margin:14px 0}
+    .time-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:10px}
+    .time{padding:12px; text-align:center; border-radius:12px; border:2px solid #cbd5e1; background:#fff; cursor:pointer; font-weight:800}
+    .time.active{border-color:var(--brand); background:#e0f2fe}
+    .payments{display:grid; grid-template-columns:repeat(auto-fit, minmax(220px,1fr)); gap:12px}
+    .paycard{display:flex; gap:12px; align-items:center; border:2px solid #cbd5e1; border-radius:12px; background:#fff; padding:12px; cursor:pointer}
+    .paycard.active{border-color:var(--brand); background:#e0f2fe}
+    .paycard img{width:48px; height:48px; object-fit:contain}
+    .pay-meta{font-size:13px}
+    .pay-meta b{display:block}
+    .modal{position:fixed; inset:0; background:rgba(15,23,42,.5); display:none; align-items:center; justify-content:center; padding:16px}
+    .modal .box{background:#fff; color:var(--ink); border-radius:18px; padding:28px; width:min(520px,95vw); text-align:center; box-shadow:var(--shadow)}
+    .check{width:78px; height:78px; margin:0 auto 10px; border-radius:50%; display:grid; place-items:center; background:#ecfdf5; border:3px solid #bbf7d0}
+    .check svg{width:44px; height:44px; color:#16a34a}
+    .wa-btn{margin-top:10px}
+    footer{padding:28px 16px; text-align:center; color:#334155}
+    @media (max-width:720px){
+      .grid-2{grid-template-columns:1fr}
+      .form-grid{grid-template-columns:1fr}
+      .time-grid{grid-template-columns:repeat(2,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap row">
+      <div class="brand">
+        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCAzMDAgODAiPgogIDxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiMwZWE1ZTkiLz4KICA8dGV4dCB4PSI1MCUiIHk9IjUwJSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIKICAgICAgICBmb250LWZhbWlseT0iQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyMiIgZmlsbD0iI2ZmZiIgZm9udC13ZWlnaHQ9ImJvbGQiPkxPR08gUFQgREVXQSBJTkRBSCBXSVNBVEE8L3RleHQ+Cjwvc3ZnPg==" alt="Logo PT Dewa Indah Wisata" />
+        <h1>PT DEWA INDAH WISATA</h1>
+      </div>
+      <nav>
+        <a href="#visi">Visi & Misi</a>
+        <a href="#galeri">Galeri Armada</a>
+        <a href="#pesan">Pesan Tiket</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="wrap hero">
+      <div class="hero-card">
+        <h2>Transportasi Antar Kota yang Nyaman, Aman, Tepat Waktu</h2>
+        <p>Kini pemesanan makin mudah. Isi formulir, pilih jadwal, bayar, lalu konfirmasi via WhatsApp <b>wa.me/62895404019535</b>.</p>
+      </div>
+    </div>
+
+    <section id="visi">
+      <div class="wrap">
+        <h2 class="section-title">Visi & Misi PT DEWA INDAH WISATA</h2>
+        <div class="grid-2">
+          <div class="card">
+            <h3>Visi</h3>
+            <p>Menjadi penyedia layanan perjalanan darat terpercaya di Indonesia dengan standar keselamatan, kenyamanan, dan ketepatan waktu tingkat tinggi, didukung teknologi pemesanan yang sederhana dan transparan.</p>
+          </div>
+          <div class="card">
+            <h3>Misi</h3>
+            <ul>
+              <li>Menjaga keselamatan penumpang sebagai prioritas utama.</li>
+              <li>Menyediakan armada yang bersih, nyaman, dan terawat.</li>
+              <li>Menjamin ketepatan waktu keberangkatan dan kedatangan.</li>
+              <li>Menghadirkan harga yang jelas tanpa biaya tersembunyi.</li>
+              <li>Memudahkan pemesanan dan konfirmasi melalui sistem digital.</li>
+              <li>Melayani pelanggan dengan cepat, ramah, dan profesional.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="galeri">
+      <div class="wrap">
+        <h2 class="section-title">Galeri Armada</h2>
+        <div class="gallery">
+          <figure>
+            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NDAiIGhlaWdodD0iMzYwIiB2aWV3Qm94PSIwIDAgNjQwIDM2MCI+CiAgPHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iIzM4YmRmOCIvPgogIDx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIgogICAgICAgIGZvbnQtZmFtaWx5PSJBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjI4IiBmaWxsPSIjZmZmZmZmIiBmb250LXdlaWdodD0iYm9sZCI+SGlhY2UgQ29tbXV0ZXI8L3RleHQ+Cjwvc3ZnPg==" alt="Hiace Commuter" />
+            <figcaption>Hiace Commuter</figcaption>
+          </figure>
+          <figure>
+            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NDAiIGhlaWdodD0iMzYwIiB2aWV3Qm94PSIwIDAgNjQwIDM2MCI+CiAgPHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iIzIyYzU1ZSIvPgogIDx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIgogICAgICAgIGZvbnQtZmFtaWx5PSJBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjI4IiBmaWxsPSIjZmZmZmZmIiBmb250LXdlaWdodD0iYm9sZCI+SXN1enUgRWxmIExvbmc8L3RleHQ+Cjwvc3ZnPg==" alt="Isuzu Elf Long" />
+            <figcaption>Isuzu Elf Long</figcaption>
+          </figure>
+          <figure>
+            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NDAiIGhlaWdodD0iMzYwIiB2aWV3Qm94PSIwIDAgNjQwIDM2MCI+CiAgPHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iI2E3OGJmYSIvPgogIDx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIgogICAgICAgIGZvbnQtZmFtaWx5PSJBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjI4IiBmaWxsPSIjZmZmZmZmIiBmb250LXdlaWdodD0iYm9sZCI+TWVkaXVtIEJ1czwvdGV4dD4KPC9zdmc+" alt="Medium Bus" />
+            <figcaption>Medium Bus</figcaption>
+          </figure>
+          <figure>
+            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NDAiIGhlaWdodD0iMzYwIiB2aWV3Qm94PSIwIDAgNjQwIDM2MCI+CiAgPHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iI2Y5NzMxNiIvPgogIDx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIgogICAgICAgIGZvbnQtZmFtaWx5PSJBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjI4IiBmaWxsPSIjZmZmZmZmIiBmb250LXdlaWdodD0iYm9sZCI+QmlnIEJ1czwvdGV4dD4KPC9zdmc+" alt="Big Bus" />
+            <figcaption>Big Bus</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section id="pesan">
+      <div class="wrap">
+        <h2 class="section-title">Formulir Pemesanan</h2>
+        <div class="card">
+          <div class="stepper">
+            <span class="pill active" id="pill-1">Step 1 • Isi Data</span>
+            <span class="pill" id="pill-2">Step 2 • Pilih Jadwal</span>
+            <span class="pill" id="pill-3">Step 3 • Pembayaran</span>
+          </div>
+
+          <div id="step-1">
+            <div class="form-grid">
+              <div>
+                <label>Nama Lengkap</label>
+                <input id="nama" type="text" placeholder="Nama sesuai KTP" />
+              </div>
+              <div>
+                <label>Nomor Handphone</label>
+                <input id="hp" type="tel" placeholder="08xxxxxxxxxx" />
+              </div>
+              <div>
+                <label>Kota Asal</label>
+                <select id="asal"></select>
+              </div>
+              <div>
+                <label>Kota Tujuan</label>
+                <select id="tujuan"></select>
+              </div>
+              <div>
+                <label>Tanggal Keberangkatan</label>
+                <input id="tanggal" type="date" />
+              </div>
+              <div>
+                <label>Jumlah Orang</label>
+                <select id="pax"></select>
+              </div>
+            </div>
+
+            <div class="divider"></div>
+            <div class="row" style="align-items:center; justify-content:space-between;">
+              <div>
+                <div class="muted">Harga per orang</div>
+                <div class="price" id="hargaPerOrang">Rp0</div>
+              </div>
+              <div>
+                <div class="muted">Total</div>
+                <div class="price" id="hargaTotal">Rp0</div>
+              </div>
+              <div style="margin-left:auto">
+                <button id="to-step-2" class="btn">Klik Tiket</button>
+              </div>
+            </div>
+            <p class="hint">Harga di atas adalah <b>harga per orang x jumlah orang</b>.</p>
+          </div>
+
+          <div id="step-2" style="display:none">
+            <p>Pilih Jadwal Keberangkatan:</p>
+            <div class="time-grid">
+              <button class="time" data-time="09:00">Pagi • 09:00</button>
+              <button class="time" data-time="12:00">Siang • 12:00</button>
+              <button class="time" data-time="17:00">Sore • 17:00</button>
+              <button class="time" data-time="20:00">Malam • 20:00</button>
+            </div>
+            <p class="hint">Setelah memilih jam, Anda otomatis lanjut ke Step 3.</p>
+          </div>
+
+          <div id="step-3" style="display:none">
+            <p>Pilih Metode Pembayaran:</p>
+            <div class="payments">
+              <div class="paycard" data-method="COD">
+                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5NiIgaGVpZ2h0PSI5NiIgdmlld0JveD0iMCAwIDk2IDk2Ij4KICA8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMTExODI3Ii8+CiAgPHRleHQgeD0iNTAlIiB5PSI1MCUiIGRvbWluYW50LWJhc2VsaW5lPSJtaWRkbGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiCiAgICAgICAgZm9udC1mYW1pbHk9IkFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjgiIGZpbGw9IiNmZWYzYzciIGZvbnQtd2VpZ2h0PSJib2xkIj5DT0Q8L3RleHQ+Cjwvc3ZnPg==" alt="Cash On Driver" />
+                <div class="pay-meta">
+                  <b>Cash On Driver</b>
+                  <span>Bayar langsung ke pengemudi saat penjemputan.</span>
+                </div>
+              </div>
+              <div class="paycard" data-method="DANA">
+                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5NiIgaGVpZ2h0PSI5NiIgdmlld0JveD0iMCAwIDk2IDk2Ij4KICA8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMjU2M2ViIi8+CiAgPHRleHQgeD0iNTAlIiB5PSI1MCUiIGRvbWluYW50LWJhc2VsaW5lPSJtaWRkbGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiCiAgICAgICAgZm9udC1mYW1pbHk9IkFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjgiIGZpbGw9IiNmZmYiIGZvbnQtd2VpZ2h0PSJib2xkIj5EQU5BPC90ZXh0Pgo8L3N2Zz4=" alt="DANA" />
+                <div class="pay-meta">
+                  <b>DANA</b>
+                  <span>0881-5898-569 • a.n. Yenny Surya Ng</span>
+                </div>
+              </div>
+              <div class="paycard" data-method="BCA">
+                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5NiIgaGVpZ2h0PSI5NiIgdmlld0JveD0iMCAwIDk2IDk2Ij4KICA8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMWU0MGFmIi8+CiAgPHRleHQgeD0iNTAlIiB5PSI1MCUiIGRvbWluYW50LWJhc2VsaW5lPSJtaWRkbGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiCiAgICAgICAgZm9udC1mYW1pbHk9IkFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjgiIGZpbGw9IiNmZmYiIGZvbnQtd2VpZ2h0PSJib2xkIj5CQ0E8L3RleHQ+Cjwvc3ZnPg==" alt="BCA" />
+                <div class="pay-meta">
+                  <b>BCA</b>
+                  <span>1140255943 • a.n. Rofiqoh</span>
+                </div>
+              </div>
+              <div class="paycard" data-method="Mandiri">
+                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5NiIgaGVpZ2h0PSI5NiIgdmlld0JveD0iMCAwIDk2IDk2Ij4KICA8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMGY3NjZlIi8+CiAgPHRleHQgeD0iNTAlIiB5PSI1MCUiIGRvbWluYW50LWJhc2VsaW5lPSJtaWRkbGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiCiAgICAgICAgZm9udC1mYW1pbHk9IkFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjQiIGZpbGw9IiNmZmYiIGZvbnQtd2VpZ2h0PSJib2xkIj5NYW5kaXJpPC90ZXh0Pgo8L3N2Zz4=" alt="Mandiri" />
+                <div class="pay-meta">
+                  <b>Mandiri</b>
+                  <span>1120011382657 • a.n. Yusman Toha</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="divider"></div>
+            <div class="row" style="justify-content:space-between; align-items:center">
+              <div>
+                <div class="muted">Ringkasan</div>
+                <div id="ringkasan" style="font-weight:700"></div>
+              </div>
+              <button id="pay" class="btn" disabled>Bayar Sekarang</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      &copy; <span id="year"></span> PT DEWA INDAH WISATA • Konfirmasi WhatsApp: <a href="https://wa.me/62895404019535" target="_blank" rel="noopener">wa.me/62895404019535</a>
+    </footer>
+  </main>
+
+  <div class="modal" id="modal-ok">
+    <div class="box">
+      <div class="check">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+      </div>
+      <h3>Pembayaran Berhasil</h3>
+      <p>Terima kasih. Detail pesanan Anda bisa dikirim ke WhatsApp agar tim kami menindaklanjuti penjemputan.</p>
+      <div class="row" style="justify-content:center; gap:10px; margin-top:10px">
+        <a id="wa-link" class="btn wa-btn" href="#" target="_blank" rel="noopener">Kirim Detail ke WhatsApp</a>
+        <button class="btn outline" onclick="document.getElementById('modal-ok').style.display='none'">Tutup</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const routes = {
+      "Medan|Pekanbaru": 400000,
+      "Medan|Jambi": 670000,
+      "Medan|Palembang": 850000,
+      "Medan|Bandar Lampung": 1100000,
+      "Medan|Jakarta": 1400000,
+      "Medan|Bandung": 1550000,
+      "Medan|Bogor": 1550000,
+      "Medan|Semarang": 1750000,
+      "Medan|Yogyakarta": 1900000,
+      "Medan|Surabaya": 2000000,
+      "Medan|Denpasar Bali": 2200000,
+
+      "Pekanbaru|Jambi": 250000,
+      "Pekanbaru|Palembang": 430000,
+      "Pekanbaru|Bandar Lampung": 680000,
+      "Pekanbaru|Jakarta": 1050000,
+      "Pekanbaru|Bandung": 1150000,
+      "Pekanbaru|Bogor": 1150000,
+      "Pekanbaru|Semarang": 1300000,
+      "Pekanbaru|Yogyakarta": 1450000,
+      "Pekanbaru|Surabaya": 1650000,
+      "Pekanbaru|Denpasar Bali": 1850000,
+
+      "Bandar Lampung|Jakarta": 350000,
+      "Bandar Lampung|Bandung": 500000,
+      "Bandar Lampung|Bogor": 500000,
+      "Bandar Lampung|Garut": 550000,
+      "Bandar Lampung|Semarang": 700000,
+      "Bandar Lampung|Yogyakarta": 850000,
+      "Bandar Lampung|Surabaya": 1000000,
+      "Bandar Lampung|Denpasar Bali": 1200000,
+
+      "Jambi|Palembang": 180000,
+      "Jambi|Bandar Lampung": 430000,
+      "Jambi|Jakarta": 780000,
+      "Jambi|Bandung": 1050000,
+      "Jambi|Bogor": 1050000,
+      "Jambi|Semarang": 1200000,
+      "Jambi|Yogyakarta": 1350000,
+      "Jambi|Surabaya": 1550000,
+      "Jambi|Denpasar Bali": 1750000,
+
+      "Palembang|Bandar Lampung": 250000,
+      "Palembang|Jakarta": 600000,
+      "Palembang|Bandung": 750000,
+      "Palembang|Bogor": 750000,
+      "Palembang|Semarang": 900000,
+      "Palembang|Surabaya": 1100000,
+      "Palembang|Denpasar Bali": 1300000,
+
+      "Jakarta|Bandung": 250000,
+      "Jakarta|Bogor": 250000,
+      "Jakarta|Sukabumi": 300000,
+      "Jakarta|Tasikmalaya": 300000,
+      "Jakarta|Garut": 300000,
+      "Jakarta|Semarang": 350000,
+      "Jakarta|Yogyakarta": 450000,
+      "Jakarta|Surabaya": 550000,
+      "Jakarta|Denpasar Bali": 800000,
+
+      "Tanggerang|Bandung": 300000,
+      "Tanggerang|Bogor": 300000,
+      "Tanggerang|Sukabumi": 350000,
+      "Tanggerang|Tasikmalaya": 350000,
+      "Tanggerang|Garut": 350000,
+      "Tanggerang|Semarang": 400000,
+      "Tanggerang|Yogyakarta": 500000,
+      "Tanggerang|Surabaya": 6000000,
+      "Tanggerang|Denpasar Bali": 850000,
+
+      "Bandung|Jakarta": 250000,
+      "Bandung|Bogor": 250000,
+      "Bandung|Sukabumi": 300000,
+      "Bandung|Tasikmalaya": 300000,
+      "Bandung|Garut": 300000,
+      "Bandung|Semarang": 350000,
+      "Bandung|Yogyakarta": 450000,
+      "Bandung|Surabaya": 550000,
+      "Bandung|Denpasar Bali": 800000,
+
+      "Denpasar Bali|Pekanbaru": 1850000,
+      "Denpasar Bali|Jambi": 1750000,
+      "Denpasar Bali|Palembang": 1300000,
+      "Denpasar Bali|Bandar Lampung": 1200000,
+      "Denpasar Bali|Jakarta": 800000,
+      "Denpasar Bali|Bandung": 800000,
+      "Denpasar Bali|Bogor": 800000,
+      "Denpasar Bali|Semarang": 500000,
+      "Denpasar Bali|Yogyakarta": 550000,
+      "Denpasar Bali|Surabaya": 350000,
+      "Denpasar Bali|Medan": 2200000,
+      "Denpasar Bali|Malang": 350000,
+
+      "Yogyakarta|Pekanbaru": 1450000,
+      "Yogyakarta|Jambi": 1350000,
+      "Yogyakarta|Palembang": 1050000,
+      "Yogyakarta|Bandar Lampung": 850000,
+      "Yogyakarta|Jakarta": 450000,
+      "Yogyakarta|Bandung": 450000,
+      "Yogyakarta|Bogor": 700000,
+      "Yogyakarta|Semarang": 250000,
+      "Yogyakarta|Denpasar Bali": 550000,
+      "Yogyakarta|Surabaya": 250000,
+      "Yogyakarta|Medan": 1900000,
+
+      "Surabaya|Jakarta": 550000,
+      "Surabaya|Bandung": 550000,
+      "Surabaya|Bogor": 600000,
+      "Surabaya|Garut": 650000,
+      "Surabaya|Tangerang": 600000,
+      "Surabaya|Bandar Lampung": 950000,
+      "Surabaya|Palembang": 1200000,
+      "Surabaya|Jambi": 1380000,
+      "Surabaya|Pekanbaru": 1750000,
+      "Surabaya|Medan": 2150000,
+
+      "Bogor|Denpasar Bali": 800000,
+      "Bogor|Surabaya": 550000,
+      "Bogor|Yogyakarta": 700000,
+      "Bogor|Semarang": 450000,
+      "Bogor|Jakarta": 250000,
+      "Bogor|Tangerang": 300000,
+      "Bogor|Bandar Lampung": 650000,
+      "Bogor|Palembang": 800000,
+      "Bogor|Jambi": 1180000,
+      "Bogor|Lubuklinggau": 1430000,
+      "Bogor|Pekanbaru": 1430000,
+      "Bogor|Medan": 1850000,
+
+      "Sukabumi|Denpasar Bali": 800000,
+      "Sukabumi|Surabaya": 550000,
+      "Sukabumi|Yogyakarta": 700000,
+      "Sukabumi|Semarang": 450000,
+      "Sukabumi|Jakarta": 250000,
+      "Sukabumi|Tangerang": 300000,
+      "Sukabumi|Bandar Lampung": 650000,
+      "Sukabumi|Palembang": 800000,
+      "Sukabumi|Jambi": 1180000,
+      "Sukabumi|Lubuklinggau": 1430000,
+      "Sukabumi|Pekanbaru": 1430000,
+      "Sukabumi|Medan": 1850000,
+
+      "Garut|Denpasar Bali": 850000,
+      "Garut|Surabaya": 600000,
+      "Garut|Yogyakarta": 750000,
+      "Garut|Semarang": 500000,
+      "Garut|Jakarta": 300000,
+      "Garut|Tangerang": 350000,
+      "Garut|Bandar Lampung": 700000,
+      "Garut|Palembang": 850000,
+      "Garut|Jambi": 1230000,
+      "Garut|Lubuklinggau": 1480000,
+      "Garut|Pekanbaru": 1480000,
+      "Garut|Medan": 1900000,
+    };
+
+    const cities = ["Medan","Pekanbaru","Jambi","Palembang","Bandar Lampung","Jakarta","Bandung","Bogor","Semarang","Yogyakarta","Surabaya","Denpasar Bali","Sukabumi","Tasikmalaya","Garut","Tanggerang","Tangerang","Lubuklinggau","Malang"];
+
+    const fmt = n => new Intl.NumberFormat('id-ID').format(n);
+    const rupiah = n => `Rp${fmt(n)}`;
+    const keyOf = (a,b) => `${a}|${b}`;
+
+    const asal = document.getElementById('asal');
+    const tujuan = document.getElementById('tujuan');
+    const pax = document.getElementById('pax');
+    const nama = document.getElementById('nama');
+    const hp = document.getElementById('hp');
+    const tanggal = document.getElementById('tanggal');
+    const hargaPerOrang = document.getElementById('hargaPerOrang');
+    const hargaTotal = document.getElementById('hargaTotal');
+    const toStep2Btn = document.getElementById('to-step-2');
+    const step1 = document.getElementById('step-1');
+    const step2 = document.getElementById('step-2');
+    const step3 = document.getElementById('step-3');
+    const pill1 = document.getElementById('pill-1');
+    const pill2 = document.getElementById('pill-2');
+    const pill3 = document.getElementById('pill-3');
+    const ringkasan = document.getElementById('ringkasan');
+    const payBtn = document.getElementById('pay');
+    const waLink = document.getElementById('wa-link');
+
+    function fillSelect(el, arr){
+      el.innerHTML = '<option value="">— Pilih —</option>' + arr.map(c => `<option value="${c}">${c}</option>`).join('');
+    }
+    fillSelect(asal, cities);
+    fillSelect(tujuan, cities);
+    pax.innerHTML = Array.from({length:20}, (_,i)=>`<option value="${i+1}">${i+1} orang</option>`).join('');
+
+    (function setToday(){
+      const d = new Date();
+      const iso = d.toISOString().slice(0,10);
+      tanggal.value = iso;
+      document.getElementById('year').textContent = d.getFullYear();
+    })();
+
+    function updatePricing(){
+      const a = asal.value; const b = tujuan.value; const n = Number(pax.value || 1);
+      let price = routes[keyOf(a,b)];
+      if(price === undefined){
+        const altA = a === 'Tanggerang' ? 'Tangerang' : a === 'Tangerang' ? 'Tanggerang' : a;
+        const altB = b === 'Tanggerang' ? 'Tangerang' : b === 'Tangerang' ? 'Tanggerang' : b;
+        price = routes[keyOf(altA,altB)];
+      }
+      if(!a || !b || a === b || price === undefined){
+        hargaPerOrang.textContent = 'Rp0';
+        hargaTotal.textContent = 'Rp0';
+        return {price:0,total:0};
+      }
+      const total = price * n;
+      hargaPerOrang.textContent = rupiah(price);
+      hargaTotal.textContent = rupiah(total);
+      return {price,total};
+    }
+
+    asal.addEventListener('change', updatePricing);
+    tujuan.addEventListener('change', updatePricing);
+    pax.addEventListener('change', updatePricing);
+
+    function setPill(step){
+      [pill1,pill2,pill3].forEach(p=>p.classList.remove('active'));
+      if(step===1) pill1.classList.add('active');
+      if(step===2) pill2.classList.add('active');
+      if(step===3) pill3.classList.add('active');
+    }
+
+    function goStep2(){
+      step1.style.display = 'none';
+      step2.style.display = 'block';
+      step3.style.display = 'none';
+      setPill(2);
+    }
+
+    function goStep3(){
+      step1.style.display = 'none';
+      step2.style.display = 'none';
+      step3.style.display = 'block';
+      setPill(3);
+    }
+
+    function validateStep1(){
+      const {price} = updatePricing();
+      const errs = [];
+      if(!(nama.value||'').trim()) errs.push('Nama');
+      if(!(hp.value||'').trim()) errs.push('No HP');
+      if(!asal.value) errs.push('Kota Asal');
+      if(!tujuan.value) errs.push('Kota Tujuan');
+      if(asal.value && tujuan.value && asal.value === tujuan.value) errs.push('Asal & Tujuan tidak boleh sama');
+      if(!tanggal.value) errs.push('Tanggal');
+      if(price === 0) errs.push('Rute belum tersedia dalam daftar harga');
+      if(errs.length){
+        alert('Mohon lengkapi: ' + errs.join(', '));
+        return false;
+      }
+      return true;
+    }
+
+    document.getElementById('to-step-2').addEventListener('click', () => {
+      if(!validateStep1()) return;
+      goStep2();
+    });
+
+    const timeButtons = [...document.querySelectorAll('.time')];
+    let pickedTime = '';
+    timeButtons.forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        timeButtons.forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        pickedTime = btn.dataset.time;
+        const a = asal.value, b = tujuan.value, n = Number(pax.value||1);
+        const {price,total} = updatePricing();
+        ringkasan.innerHTML = `${a} → ${b} • ${n} org • ${tanggal.value} • ${pickedTime} • ${rupiah(price)} /org • Total ${rupiah(total)}`;
+        goStep3();
+      });
+    });
+
+    const payCards = [...document.querySelectorAll('.paycard')];
+    let payMethod = '';
+    payCards.forEach(card=>{
+      card.addEventListener('click',()=>{
+        payCards.forEach(c=>c.classList.remove('active'));
+        card.classList.add('active');
+        payMethod = card.dataset.method;
+        payBtn.disabled = false;
+      });
+    });
+
+    payBtn.addEventListener('click', ()=>{
+      const a = asal.value, b = tujuan.value, n = Number(pax.value||1);
+      const {price,total} = updatePricing();
+      const text = [
+        '*KONFIRMASI PEMESANAN*',
+        `Nama: ${nama.value}`,
+        `HP: ${hp.value}`,
+        `Asal → Tujuan: ${a} → ${b}`,
+        `Tanggal/Jam: ${tanggal.value} • ${pickedTime}`,
+        `Jumlah Orang: ${n}`,
+        `Harga per orang: ${rupiah(price)}`,
+        `TOTAL: ${rupiah(total)}`,
+        `Metode Bayar: ${payMethod}`,
+        '',
+        'Mohon tindak lanjut penjemputan. Terima kasih.'
+      ].join('%0A');
+      const url = `https://wa.me/62895404019535?text=${text}`;
+      waLink.href = url;
+      document.getElementById('modal-ok').style.display='flex';
+    });
+  </script>
+</body>
+</html>
